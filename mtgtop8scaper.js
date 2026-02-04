@@ -31,7 +31,7 @@ function fixFormatName(name){
     }
 }
 
-function buildEventReport(rows) {
+async function buildEventReport(rows) {
     if (!rows.length) return '';
     const baseUrl = 'https://mtgtop8.com/'
 
@@ -71,6 +71,25 @@ function buildEventReport(rows) {
         report += `${row.rank}. ${row.player} - `;
         report += `[${row.deck}](${baseUrl}${row.deckUrl})\n`;
         });
+    const links = await getDeckUrlsForEvent(winner.date)
+    const decklists = []
+    for (const link of links){
+        const decklist = await getDeckList(link)
+        decklists.push(decklist)
+    }
+    const mostCommonCards = findMostCommonCards(decklists)
+
+    if (mostCommonCards.mainboardCards.length == 1) {
+        report += `The most popular maindeck card was ${await sf(mostCommonCards.mainboardCards[0].cardname)} with ${mostCommonCards.mainboardCards[0].total} copies.\n`
+    }else{
+        report += `The most popular maindeck cards were ${await formatCards(mostCommonCards.mainboardCards)}\n`
+    }
+
+    if (mostCommonCards.sideboardCards.length == 1) {
+        report += `The most popular sideboard card was ${await sf(mostCommonCards.sideboardCards[0].cardname)} with ${mostCommonCards.sideboardCards[0].total} copies.\n`
+    }else{
+        report += `The most popular sideboard cards were ${await formatCards(mostCommonCards.sideboardCards)}\n`
+    }
 
     return report;
 }
@@ -95,7 +114,7 @@ export async function getFullEventReport(date = new Intl.DateTimeFormat('en-GB')
     }).get();
 
     console.log(data)
-    return buildEventReport(data);
+    return await buildEventReport(data);
 }
 
 export async function getDeckList(deckUrl) {
@@ -147,8 +166,8 @@ function findMostCommonCards(decklists, blacklist = ['plains', 'island', 'swamp'
 
   const countCards = (lists) => {
     const totals = new Map();
-
     for (const list of lists) {
+        
       for (const { cardname, count } of list) {
         if (blacklistSet.has(cardname.toLowerCase())) continue;
 
@@ -195,21 +214,43 @@ export async function getDeckUrlsForEvent(
     .filter(Boolean);
 }
 
+async function formatCards(cards) {
+  if (!Array.isArray(cards) || cards.length === 0) return "";
 
+  const count = cards[0].total;
+  const names = cards.map(c => c.cardname);
 
+  let list;
+  if (names.length === 1) {
+    list = await sf(names[0]);
+  } else if (names.length === 2) {
+    list = `${await sf(names[0])} and ${await sf(names[1])}`;
+  } else {
+    list = `${await sf(names.slice(0, -1).join(", "))} and ${await sf(names.at(-1))}`;
+  }
 
-
-// I wanna add top cards to the template too.
-
-
-const deckUrl = 'https://mtgtop8.com/event?e=7348&d=242084&f=BL'
-
-//console.log(await fetch(deckUrl).then(res => res.text()));
-const links = await getDeckUrlsForEvent("18/5/14")
-const decklists = []
-for (const link of links){
-    const decklist = await getDeckList(link)
-    decklists.push(decklist)
+  return `${list}. Each with ${count} copies.`;
 }
-console.log(findMostCommonCards(decklists))
-console.log(decklists.length)
+
+async function sf(cardname){
+    function sanitizeString(str) {
+        return str
+            .trim()
+            .replace(/\s+/g, "+")          // replace spaces with +
+            .replace(/[^a-zA-Z0-9+]/g, ""); // remove non-alphanumeric (keep +)
+        }
+    const apiUrl = `https://api.scryfall.com/cards/named?exact=${sanitizeString(cardname)}`
+    let scryfalUrl = ''
+    await fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            scryfalUrl = data.scryfall_uri
+        })
+        .catch(err => {
+            console.error(err);
+        });
+    return `[${cardname}](${scryfalUrl})`
+}
+
+// Just a lil test
+console.log(await getFullEventReport("18/5/14"))
