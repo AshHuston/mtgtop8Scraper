@@ -1,5 +1,5 @@
 import * as cheerio from 'cheerio';
-
+import { markdownScryfallLlink } from './scryfall.js';
 export async function getEventForDate(date) {
 
     const params = new URLSearchParams();
@@ -80,13 +80,13 @@ async function buildEventReport(rows) {
     const mostCommonCards = findMostCommonCards(decklists)
 
     if (mostCommonCards.mainboardCards.length == 1) {
-        report += `The most popular maindeck card was ${await sf(mostCommonCards.mainboardCards[0].cardname)} with ${mostCommonCards.mainboardCards[0].total} copies.\n`
+        report += `The most popular maindeck card was ${await markdownScryfallLlink(mostCommonCards.mainboardCards[0].cardname)} with ${mostCommonCards.mainboardCards[0].total} copies.\n`
     }else{
         report += `The most popular maindeck cards were ${await formatCards(mostCommonCards.mainboardCards)}\n`
     }
 
     if (mostCommonCards.sideboardCards.length == 1) {
-        report += `The most popular sideboard card was ${await sf(mostCommonCards.sideboardCards[0].cardname)} with ${mostCommonCards.sideboardCards[0].total} copies.\n`
+        report += `The most popular sideboard card was ${await markdownScryfallLlink(mostCommonCards.sideboardCards[0].cardname)} with ${mostCommonCards.sideboardCards[0].total} copies.\n`
     }else{
         report += `The most popular sideboard cards were ${await formatCards(mostCommonCards.sideboardCards)}\n`
     }
@@ -222,35 +222,15 @@ async function formatCards(cards) {
 
   let list;
   if (names.length === 1) {
-    list = await sf(names[0]);
+    list = await markdownScryfallLlink(names[0]);
   } else if (names.length === 2) {
-    list = `${await sf(names[0])} and ${await sf(names[1])}`;
+    list = `${await markdownScryfallLlink(names[0])} and ${await markdownScryfallLlink(names[1])}`;
   } else {
-    list = `${await sf(names.slice(0, -1).join(", "))} and ${await sf(names.at(-1))}`;
+    list = `${await markdownScryfallLlink(names.slice(0, -1).join(", "))} and ${await markdownScryfallLlink(names.at(-1))}`;
   }
 
   return `${list}. Each with ${count} copies.`;
 }
 
-async function sf(cardname){
-    function sanitizeString(str) {
-        return str
-            .trim()
-            .replace(/\s+/g, "+")          // replace spaces with +
-            .replace(/[^a-zA-Z0-9+]/g, ""); // remove non-alphanumeric (keep +)
-        }
-    const apiUrl = `https://api.scryfall.com/cards/named?exact=${sanitizeString(cardname)}`
-    let scryfalUrl = ''
-    await fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-            scryfalUrl = data.scryfall_uri
-        })
-        .catch(err => {
-            console.error(err);
-        });
-    return `[${cardname}](${scryfalUrl})`
-}
-
 // Just a lil test
-console.log(await getFullEventReport("18/5/14"))
+console.log(await getFullEventReport("18/10/15"))
