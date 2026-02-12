@@ -30,7 +30,7 @@ function findFilesByDateRecursive(folderPath, targetDate) {
   return matches;
 }
 
-function getWaybackLinks(targetDate, folderPath = "./articles") {
+function getWaybackLinks(targetDate, folderPath = "./archive") {
   const files = findFilesByDateRecursive(folderPath, targetDate);
   const urls = [];
 
