@@ -1,3 +1,3 @@
-import * as sf from './scryfall.js'
+import { startChronJobs } from "./chronjobs.js";
 
-console.log(await sf.findSetReleasedOn("2009-10-02"))
+startChronJobs()

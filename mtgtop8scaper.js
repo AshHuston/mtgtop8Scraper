@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio';
 import { markdownScryfallLlink } from './scryfall.js';
+
 export async function getEventForDate(date) {
 
     const params = new URLSearchParams();
@@ -100,21 +101,36 @@ export async function getFullEventReport(date = new Intl.DateTimeFormat('en-GB')
     const table = $('table.Stable');
     const rows = table.find('tr.hover_tr');
     const data = rows.map((_, row) => {
-    const cells = $(row).find('td');
-    return {
-        deck: cells.eq(1).text().trim(),
-        player: cells.eq(2).text().trim(),
-        format: cells.eq(3).text().trim(),
-        event: cells.eq(4).text().trim(),
-        rank: cells.eq(6).text().trim(),
-        date: cells.eq(7).text().trim(),
-        deckUrl: cells.eq(1).find('a').attr('href'),
-        playerUrl: cells.eq(2).find('a').attr('href'),
-    };
+        const cells = $(row).find('td');
+        return {
+            deck: cells.eq(1).text().trim(),
+            player: cells.eq(2).text().trim(),
+            format: cells.eq(3).text().trim(),
+            event: cells.eq(4).text().trim(),
+            rank: cells.eq(6).text().trim(),
+            date: cells.eq(7).text().trim(),
+            deckUrl: cells.eq(1).find('a').attr('href'),
+            playerUrl: cells.eq(2).find('a').attr('href'),
+        };
     }).get();
 
-    console.log(data)
-    return await buildEventReport(data);
+    const groupedData = Object.values(
+        data.reduce((acc, item) => {
+            if (!acc[item.event]) {
+            acc[item.event] = [];
+            }
+            acc[item.event].push(item);
+            return acc;
+        }, {})
+    );
+
+    let finalReport = "";
+
+    for (const eventGroup of groupedData) {
+        const report = await buildEventReport(eventGroup);
+        finalReport += report + "\n";
+    }
+    return finalReport.length ? '### ' + finalReport.trim() : '';
 }
 
 export async function getDeckList(deckUrl) {
@@ -233,4 +249,4 @@ async function formatCards(cards) {
 }
 
 // Just a lil test
-console.log(await getFullEventReport("18/10/15"))
+//console.log(await getFullEventReport("18/10/15"))
