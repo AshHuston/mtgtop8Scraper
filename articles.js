@@ -88,7 +88,7 @@ function urlToMarkdown(url) {
       .join(" ");
 
     // Return Markdown
-    return `[${title}](${url})`;
+    return `[${title}](<${url}>)`;
   } catch (err) {
     console.error("Invalid URL:", url);
     return url;
