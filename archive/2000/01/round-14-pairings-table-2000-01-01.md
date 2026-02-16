@@ -1,3 +1,0 @@
-
----
-[Link to Wayback Machine](https://web.archive.org/web/20171030072541/https://magic.wizards.com/en/articles/archive/round-14-pairings-table-2000-01-01)

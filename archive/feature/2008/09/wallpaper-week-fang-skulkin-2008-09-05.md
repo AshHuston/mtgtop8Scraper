@@ -1,3 +1,0 @@
-
----
-[Link to Wayback Machine](https://web.archive.org/web/20220706193840/https://magic.wizards.com/en/articles/archive/feature/wallpaper-week-fang-skulkin-2008-09-05)

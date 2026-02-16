@@ -1,3 +1,0 @@
-
----
-[Link to Wayback Machine](https://web.archive.org/web/20211130224721/https://magic.wizards.com/en/articles/archive/feature/visual-spoiler-2011-01-05)

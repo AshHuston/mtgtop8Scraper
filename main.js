@@ -1,3 +1,5 @@
 import { startChronJobs } from "./chronjobs.js";
+import { run as runChecksAndSend } from './runChecks.js'
 
-startChronJobs()
+runChecksAndSend()
+//startChronJobs()
