@@ -12,23 +12,23 @@ const PORT = process.env.PORT || 3000;
 
 app.post("/run-checks", async (req, res) => {
     try {
-    runChecksAndSend().then(result => {
-        sendMessage(`${new Date()}:\n${result}`)
-        return res.status(200).json({
-            success: true,
-            data: result
-        });
-    } )
-  } catch (err) {
-    console.error(err);
+        runChecksAndSend().then(result => {
+            sendMessage(result)
+            return res.status(200).json({
+                success: true,
+                data: result
+            });
+        } )
+    } catch (err) {
+        console.error(err);
 
-    return res.status(500).json({
-      success: false,
-      error: err.message || "Internal Server Error"
-    });
+        return res.status(500).json({
+            success: false,
+            error: err.message || "Internal Server Error"
+        });
   }
 });
 
 app.listen(PORT, () => {
-  console.log("Server running at http://localhost:3000");
+    console.log("Server running at https://mtgtop8scraper.onrender.com/");
 });
