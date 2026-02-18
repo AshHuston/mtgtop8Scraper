@@ -1,5 +1,6 @@
 import cron from 'node-cron'
 import { run as runChecksAndSend } from './runChecks.js'
+import { sendMessage } from './discordBot.js'
 
 export function startChronJobs(){
     // Every day at 10:30am New York time

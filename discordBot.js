@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import { REST, Routes } from 'discord.js';
 dotenv.config();
 
-async function sendMessage(channelId, content) {
-  const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
+export async function sendMessage(content, channelId = process.env.CHANNEL_ID) {
+  const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
 
   try {
     await rest.post(
@@ -16,5 +16,3 @@ async function sendMessage(channelId, content) {
     console.error("Failed to send message:", error);
   }
 }
-
-module.exports = sendMessage;

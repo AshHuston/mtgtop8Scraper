@@ -28,8 +28,7 @@ async function runLastXYears(numOfYears, increment=5, baseDate = new Date()) {
   return finalReport
 }
 
-export function run() {
-  runLastXYears(100).then(report => {
-    console.log(report)
-  })
+export async function run() {
+  const report = await runLastXYears(100)
+  return report
 }

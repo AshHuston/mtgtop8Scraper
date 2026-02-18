@@ -1,5 +1,7 @@
 import { startChronJobs } from "./chronjobs.js";
-import { run as runChecksAndSend } from './runChecks.js'
+import { run } from './runChecks.js'
+import { sendMessage } from './discordBot.js'
 
-runChecksAndSend()
-//startChronJobs()
+//sendMessage(await run())
+// Gotta figuire out how to mak ethe bot take a promisew and wait for it
+startChronJobs()
