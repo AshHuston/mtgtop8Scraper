@@ -8,7 +8,7 @@ export function startChronJobs(){
         '30 10 * * *', 
         () => {
             console.log('Attempting nostalgia collection.')
-            runChecksAndSend()
+            runChecksAndSend().then(result => { sendMessage(`${new Date()}:\n${result}`) } )
         },
         {
             timezone: 'America/New_York'
@@ -17,7 +17,6 @@ export function startChronJobs(){
 
     // Every minute
     cron.schedule('* * * * *', async () => {
-        console.log('Server healthy')
-        runChecksAndSend()
+        console.log('Server healthy', new Date())
     })
 }
