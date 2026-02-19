@@ -30,5 +30,5 @@ async function runLastXYears(numOfYears, increment=5, baseDate = new Date()) {
 
 export async function run() {
   const report = await runLastXYears(100)
-  return report
+  return report ? report : "No news today :(, but check back tomorrow for more nostalgia!"
 }
