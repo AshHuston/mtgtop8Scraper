@@ -27,6 +27,26 @@ app.use((req, res, next) => {
   next();
 });
 
+app.post("/run-checks", async (req, res) => {
+    try {
+        runChecksAndSend().then(result => {
+            sendMessage(result)
+            return res.status(200).json({
+                success: true,
+                data: result
+            });
+        } )
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+            success: false,
+            error: err.message || "Internal Server Error"
+        });
+    }
+});
+
+// This is to make manual testing/posting easier
 app.get("/run-checks", async (req, res) => {
     try {
         runChecksAndSend().then(result => {
