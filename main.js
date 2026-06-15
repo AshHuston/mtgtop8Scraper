@@ -2,8 +2,7 @@ import { startChronJobs } from "./chronjobs.js";
 import { run as runChecksAndSend } from './runChecks.js'
 import { sendMessage } from './discordBot.js'
 
-// Currently not using my own chron jobs. Because I don't want to pay to host this somwhere. So I am very hack-ily just calling from OnTheStack. https://github.com/AshHuston/OnTheStack/blob/master/onthestack/server/chronjobs.js
-//startChronJobs()
+startChronJobs()
 
 import express from "express";
 
@@ -67,5 +66,5 @@ app.get("/run-checks", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log("Server running at https://mtgtop8scraper.onrender.com/");
+    console.log(`Server running at localhost:${PORT}`);
 });

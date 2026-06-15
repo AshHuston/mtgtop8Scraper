@@ -9,7 +9,15 @@ export async function markdownScryfallLlink(cardname){
         }
     const apiUrl = `https://api.scryfall.com/cards/named?exact=${sanitizeString(cardname)}`
     let scryfalUrl = ''
-    await fetch(apiUrl)
+    await fetch(
+        apiUrl,
+        { 
+            headers : {
+                "User-Agent": "nostalgiaBot/1.1",
+                "Accept": "application/json;q=0.9,*/*;q=0.8"
+            }
+        }
+    )
         .then(response => response.json())
         .then(data => {
             scryfalUrl = data.scryfall_uri
@@ -35,7 +43,15 @@ export async function findSetReleasedOn(targetDate){
         'memorabilia',
         'promo'
     ]
-    const req = await fetch(apiUrl)
+    const req = await fetch(
+        apiUrl,
+        { 
+            headers : {
+                "User-Agent": "nostalgiaBot/1.1",
+                "Accept": "application/json;q=0.9,*/*;q=0.8"
+            }
+        }
+    )
     const json = await req.json()
     const sets = json.data
 

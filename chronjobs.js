@@ -3,9 +3,9 @@ import { run as runChecksAndSend } from './runChecks.js'
 import { sendMessage } from './discordBot.js'
 
 export function startChronJobs(){
-    // Every day at 10:30am New York time
+    // Every day at 10:00am New York time
     cron.schedule(
-        '30 10 * * *', 
+        '0 10 * * *', 
         () => {
             console.log('Attempting nostalgia collection.')
             runChecksAndSend().then(result => { sendMessage(`${new Date()}:\n${result}`) } )
